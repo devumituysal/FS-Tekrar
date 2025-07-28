@@ -1142,6 +1142,13 @@
 
         // İleri / Geri butonları için:
         document.getElementById('nextButton').addEventListener('click', () => {
+            // Eğer şu an hoş geldin mesajı görüntüleniyorsa, ilk konunun ilk slaydına git
+            if (currentMainIndex === 0 && currentSubIndex === 0 &&
+                document.querySelector('.welcome-message')) {
+                showSlide(0, 0); // 1. konunun ilk slaydı (WWW, Web)
+                return;
+            }
+
             let main = currentMainIndex;
             let sub = currentSubIndex + 1;
 
