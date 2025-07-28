@@ -1,0 +1,1193 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konu Takip Projesi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .content-area {
+            overflow-y: auto;
+            height: calc(100vh - 64px);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+
+                .sidebar.show {
+                    transform: translateX(0);
+                }
+
+            .content-area {
+                width: 100% !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .menu-toggle {
+                display: block !important;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            left: 10px;
+            top: 15px;
+            z-index: 1100;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+            .overlay.show {
+                display: block;
+            }
+
+        .welcome-message {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+            .welcome-message h2 {
+                color: #0d6efd;
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-message .quote {
+                font-style: italic;
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .welcome-message .author {
+                font-weight: bold;
+                text-align: right;
+            }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar bg-body-tertiary border-bottom" style="height: 64px;">
+        <div class="container-fluid d-flex align-items-center justify-content-between" style="height: 100%;">
+            <button class="menu-toggle btn btn-sm btn-outline-secondary">
+                ☰ Menü
+            </button>
+            <a class="navbar-brand d-flex align-items-center mx-auto" href="#" style="height: 100%;">
+                <!--<img src="logo.png" alt="Logo" style="height: 56px; width: auto; object-fit: contain;" />-->
+            </a>
+            <form id="searchForm" class="d-flex" role="search">
+                <input id="searchInput" class="form-control me-2" type="search" placeholder="Konu ara..." aria-label="Search" />
+                <button class="btn btn-outline-success" type="submit">Ara</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Sayfa İçeriği -->
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="flex-shrink-0 p-3 bg-light border-end sidebar" id="sidebar">
+            <span class="fs-5 fw-bold mb-3 d-block">📚 Konu Başlıkları</span>
+            <hr />
+            <ul class="nav nav-pills flex-column mb-auto" id="sidebarMenu">
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse1" role="button" aria-expanded="false" aria-controls="collapse1">
+                        1. Temel Kavramlar
+                    </a>
+                    <div class="collapse ps-3" id="collapse1">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="0-0">WWW, Web</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-1">Client, Server</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-2">Request, Response</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-3">Domain, Hosting</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-4">IP</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-5">HTTP Protokolü ve Çalışma Prensibi</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-6">HTTP Methods</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="0-7">HTTP Status Codes</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse2" role="button" aria-expanded="false" aria-controls="collapse2">
+                        2. HTML
+                    </a>
+                    <div class="collapse ps-3" id="collapse2">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="1-0">HTML Nedir?</a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-1">HTML Belge Oluşturma ve HTML Yapısı </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-2">Element, attribute, value kavramları </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-3">Başlıklar, Paragraflar, Listeler </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-4">İmage'lar </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-5">Bağlantılar </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-6">Tablolar </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-7">Div, Span </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="1-8">Formlar </a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse3" role="button" aria-expanded="false" aria-controls="collapse3">
+                        3. CSS
+                    </a>
+                    <div class="collapse ps-3" id="collapse3">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="2-0">CSS Giriş, Inline Styles, Classes, ID Styles </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="2-1">Temel CSS Özellikleri </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="2-2">CSS Flex ile Layout Oluşturma </a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse4" role="button" aria-expanded="false" aria-controls="collapse4">
+                        4. JavaScript
+                    </a>
+                    <div class="collapse ps-3" id="collapse4">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="3-0">Değişkenler, Sabitler ve Scope </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-1">Object ve Diziler </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-2">For Döngüleri(for-of / for-in Döngüleri) </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-3">Fonksiyonlar </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-4">Events, Event Listener </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-5">DOM Yapısı ve Manüpilasyonu </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-6">setTimeout, setInterval </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="3-7">fetch, Ajax İşlemleri </a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse5" role="button" aria-expanded="false" aria-controls="collapse5">
+                        5. Bootstrap
+                    </a>
+                    <div class="collapse ps-3" id="collapse5">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="4-0">Bootstrap Nedir? </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="4-1">Bootstrap Grid Layout </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="4-2">Bootstrap button ve input </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="4-3">Bootstrap spacing(margin, padding) </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="4-4">Bootstrap Alert, Modal, Navbar </a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link fw-bold text-dark" data-bs-toggle="collapse" href="#collapse6" role="button" aria-expanded="false" aria-controls="collapse6">
+                        6. Github
+                    </a>
+                    <div class="collapse ps-3" id="collapse6">
+                        <ul class="nav flex-column">
+                            <li><a href="#" class="nav-link text-dark" data-index="5-0">Git ve Github Nedir? </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="5-1">Github Repository İşlemleri </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="5-2">Github Desktop Kurulumu </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="5-3">Branch işlemleri (Push/Pull) </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="5-4">Pull Request ve Merge </a></li>
+                            <li><a href="#" class="nav-link text-dark" data-index="5-5">Conflict/Çakışma Çözümü </a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- İçerik Alanı -->
+        <div class="p-4 w-100 content-area" id="contentArea">
+            <div id="slideContainer" class="mb-4">
+                <div class="welcome-message">
+                    <h2>👨‍💻 Yazılım Öğrenme Yolculuğuna Hoş Geldin!</h2>
+                    <div class="quote">
+                        "Program yazmak, bir sorunu çözmek için bilgisayarla yapılan bir konuşmadır.
+                        İyi programcılar sadece kod yazmaz, problemleri zarif bir şekilde çözer."
+                    </div>
+                    <div class="author">- Andrew Hunt</div>
+                    <hr>
+                    <p>Soldaki menüden bir konu seçerek öğrenmeye başlayabilirsin.</p>
+                    <p>Unutma: Her uzman bir zamanlar acemiydi. Adım adım ilerlemek başarının anahtarıdır.</p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="prevButton" class="btn btn-outline-secondary">&lsaquo; Geri</button>
+                <button id="nextButton" class="btn btn-primary">İleri &rsaquo;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        const contents = [
+            {
+                mainTitle: "Temel Kavramlar",
+                subContents: [
+                    {
+                        subTitle: "<br /> İnternet, WWW, Web",
+                        body: `
+                             <br /><b>İnternet</b> : Bilgisayarları birbirine bağlayan küresel ağ (fiziki altyapı).
+                             <br /><b>Web</b> : İnternet üzerinde çalışan, bilgi paylaşımına olanak tanıyan hizmettir.
+                             <br /><b>WWW</b> : Web’in kendisidir; tarayıcılar aracılığıyla erişilen sayfa ve içerik ağıdır.
+                              `
+                    },
+                    {
+                        subTitle: "<br /> Client ve Server",
+                        body: `
+                             <br /><b>Client</b> : Kullanıcının cihazıdır (bilgisayar, telefon, tarayıcı vb.).Sunucuya istek gönderir ve gelen yanıtı kullanıcıya gösterir.
+                             <br /><b>Server</b> : Verileri ve hizmetleri barındıran sunucudur.Client’tan gelen isteklere yanıt verir ve gerekli bilgileri gönderir.
+                              `
+                    },
+
+                    {
+                        subTitle: "<br /> Request ve Response",
+                        body: `
+                             <br /><b>Request</b> : İstemcinin (client) sunucuya yaptığı istektir.Tarayıcı bir web sitesine erişmek istediğinde request gönderir.
+                             <br /><b>Response</b> : Sunucunun, gelen isteğe karşılık verdiği yanıttır.İstenen sayfa, veri veya hata mesajı response ile istemciye gönderilir.
+                              `
+                    }
+,
+                    {
+                        subTitle: "<br /> Domain ve Hosting",
+                        body: `
+                             <br /><b>Domain</b> : Web sitelerine ulaşmak için kullanılan alan adıdır (örnek: www.ornek.com).IP adreslerinin hatırlanması zor olduğu için alan adları kullanılır.
+                             <br /><b>Hosting</b> : Web sitesi dosyalarının (HTML, görsel, veri vb.) saklandığı sunucudur.Domain, bu içeriklere ulaşmak için hostinge yönlendirilir.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> IP Adresi",
+                        body: `
+                             <br /><b>IP</b> : Internet Protocol adresi; cihazların internete bağlanmasını sağlayan benzersiz sayısal kimliktir (örnek: 192.168.1.1).
+                             <br />Her cihaz, internete bağlandığında bir IP adresi alır ve bu adresle veri alışverişi yapar.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> HTTP Protokolü ve Çalışma Prensibi",
+                        body: `
+                             <br /><b>HTTP</b> : İstemci (client) ile sunucu (server) arasındaki veri iletişimini düzenleyen protokoldür. Web sayfalarının iletilmesini sağlar.
+                             <br />İstemci, HTTP üzerinden bir istek (request) gönderir; sunucu ise yanıt (response) döner. Bu iletişim, genellikle tarayıcı üzerinden gerçekleşir.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> HTTP Methods",
+                        body: `
+                             <br /><b>GET</b> : Sunucudan veri almak için kullanılır (örneğin bir sayfa açmak).
+                             <br /><b>POST</b> : Sunucuya veri göndermek için kullanılır (örneğin bir formu göndermek).
+                             <br /><b>PUT</b> : Var olan veriyi güncellemek için kullanılır.
+                             <br /><b>DELETE</b> : Belirli bir veriyi silmek için kullanılır.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> HTTP Status Codes",
+                        body: `
+                             <br /><b>1xx</b> : Bilgilendirme mesajları, isteğin alındığını belirtir.
+                             <br /><b>2xx</b> : Başarılı yanıtlar, işlem sorunsuz tamamlandı (ör. 200 OK).
+                             <br /><b>3xx</b> : Yönlendirme kodları, istemci başka bir kaynağa yönlendirilir (ör. 301 Moved Permanently).
+                             <br /><b>4xx</b> : Client (istemci) hataları, istek yanlış veya eksik (ör. 404 Not Found).
+                             <br /><b>5xx</b> : Server (sunucu) hataları, sunucu tarafında problem oluştu (ör. 500 Internal Server Error).
+
+                             <br /><br /><b>En Yaygın HTTP Durum Kodları:</b>
+                             <br /><b>200 OK</b> : İstek başarılı şekilde tamamlandı.
+                             <br /><b>301 Moved Permanently</b> : Kalıcı yönlendirme, istenen kaynak başka yere taşındı.
+                             <br /><b>302 Found</b> : Geçici yönlendirme, istenen kaynak geçici olarak başka yerde.
+                             <br /><b>400 Bad Request</b> : İstemciden gelen istek hatalı veya eksik.
+                             <br /><b>401 Unauthorized</b> : Yetkilendirme gerekli veya başarısız.
+                             <br /><b>403 Forbidden</b> : İstek anlaşıldı ancak yetki yok.
+                             <br /><b>404 Not Found</b> : İstenen kaynak bulunamadı.
+                             <br /><b>500 Internal Server Error</b> : Sunucu beklenmedik bir hata ile karşılaştı.
+                             <br /><b>503 Service Unavailable</b> : Sunucu şu anda kullanılamıyor, bakımda olabilir.
+                             `
+                    }
+
+
+                ]
+            },
+            {
+                mainTitle: "HTML",
+                subContents: [
+                    {
+                        subTitle: "<br /> HTML Nedir?",
+                        body: `
+                             <br />Web sayfalarının temel yapısını oluşturan, içeriği tanımlamak için kullanılan işaretleme dilidir.Tarayıcılar HTML kodlarını yorumlayarak sayfaları kullanıcıya görsel olarak sunar.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> HTML Belge Oluşturma ve HTML Yapısı",
+                        body: `
+                             <br /><code>&lt;!DOCTYPE html&gt;</code> : Belgenin HTML5 standardında olduğunu belirtir.
+                             <br /><code>&lt;html&gt;</code> : Tüm HTML içeriğinin sarıldığı kök (root) etikettir.
+                             <br />İçinde genellikle <code>&lt;head&gt;</code> (başlık, stil, meta bilgileri) ve <code>&lt;body&gt;</code> (sayfa içeriği) bölümleri bulunur.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Element, Attribute ve Value Kavramları",
+                        body: `
+                             <br /><b>Element</b> : HTML’de içerik yapısını oluşturan temel birimdir, örneğin <code>&lt;p&gt;</code> paragraf elementi.
+                             <br /><b>Attribute</b> : Elementlere ek bilgi veya özellik veren niteliklerdir, örneğin <code>href</code> bağlantı adresini belirtir.
+                             <br /><b>Value</b> : Attribute’un aldığı değerdir, örneğin <code>\"https://www.ornek.com\"</code> bir href değeridir.
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Başlıklar, Paragraflar, Listeler",
+                        body: `
+                             <br /><b>Başlıklar:</b> h1’den h6’ya kadar <code>&lt;h1&gt;</code> - <code>&lt;h6&gt;</code> etiketleri ile kullanılır.
+                             <br />
+                             <h1>h1 başlık (h1)</h1>
+                             <h2>h2 başlık (h2)</h2>
+                             <h3>h3 başlık (h3)</h3>
+                             <h4>h4 başlık (h4)</h4>
+                             <h5>h5 başlık (h5)</h5>
+                             <h6>h6 başlık (h6)</h6>
+
+                             <br /><b>Paragraf:</b> <code>&lt;p&gt;</code> etiketi ile oluşturulur.
+                             <br /><p>Bu bir paragraf örneğidir.</p>
+
+                             <br /><b>Sırasız Liste:</b> <code>&lt;ul&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
+                             <ul>
+                                 <li>İlk madde</li>
+                                <li>İkinci madde</li>
+                                 <li>Üçüncü madde</li>
+                             </ul>
+
+                             <br /><b>Sıralı Liste:</b> <code>&lt;ol&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
+                             <ol>
+                                 <li>Birinci madde</li>
+                                 <li>İkinci madde</li>
+                                 <li>Üçüncü madde</li>
+                             </ol>
+                             `
+                    }
+,
+
+                    {
+                        subTitle: "<br /> Image’lar",
+                        body: `
+                             <br /><code>&lt;img src="resim.jpg" alt="Açıklama"&gt;</code> etiketi web sayfasına resim eklemek için kullanılır.
+                             <br /><b>src</b> : Resmin dosya yolu veya URL’sini belirtir.
+                             <br /><b>alt</b> : Resim yüklenemezse gösterilecek açıklamadır, erişilebilirlik için önemlidir.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Bağlantılar",
+                        body: `
+                             <br /><code>&lt;a href="https://example.com"&gt;Tıkla&lt;/a&gt;</code> etiketi bir bağlantı oluşturur.
+                             <br /><b>href</b> : Bağlantının yönlendirdiği URL’yi belirtir.
+                             <br />Kullanıcı bağlantıya tıkladığında, tarayıcı belirtilen sayfaya gider.
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Tablolar",
+                        body: `
+                             <br />Tablolar <code>&lt;table&gt;</code> etiketiyle oluşturulur.
+                             <br><code>&lt;tr&gt;</code> : Tablo satırını belirtir.
+                             <br><code>&lt;td&gt;</code> : Satır içindeki hücreyi (sütun) belirtir.
+                             <br>Örnek:
+                             <br /><code>
+                             &lt;table&gt;<br />
+                             &nbsp;&nbsp;&lt;tr&gt;<br />
+                             &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 1&lt;/td&gt;<br />
+                             &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 2&lt;/td&gt;<br />
+                             &nbsp;&nbsp;&lt;/tr&gt;<br />
+                             &lt;/table&gt;
+                             </code>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Div ve Span",
+                        body: `
+                             <br /><b>Div</b> : Blok (block) seviyesinde bir elementtir.
+                             Sayfada yeni bir satır başlatır ve genişliği varsayılan olarak tam olur.
+                             <br /><b>Span</b> : Satır içi (inline) bir elementtir.
+                             Metin içinde kullanılır, yeni satır oluşturmaz.
+                             <br />Örnek: <code>&lt;div&gt;Blok alan&lt;/div&gt;</code>, <code>&lt;span&gt;Satır içi metin&lt;/span&gt;</code>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Formlar",
+                        body: `
+                             <br />Kullanıcıdan veri toplamak için <code>&lt;form&gt;</code> etiketi kullanılır.
+                             <br />Örnek bazı form inputları:
+                             <br /><code>&lt;input type="text" name="isim" placeholder="İsminiz"&gt;</code> — metin kutusu
+                             <br /><code>&lt;input type="email" name="email" placeholder="E-posta"&gt;</code> — e-posta girişi
+                             <br /><code>&lt;input type="password" name="sifre" placeholder="Şifre"&gt;</code> — şifre kutusu
+                             <br /><code>&lt;input type="checkbox" name="abonelik"&gt;</code> — onay kutusu
+                             <br /><code>&lt;input type="radio" name="cinsiyet" value="erkek"&gt;</code> — radyo butonu
+                             <br /><code>&lt;textarea name="mesaj" placeholder="Mesajınız"&gt;&lt;/textarea&gt;</code> — çok satırlı metin alanı
+                             `
+                    }
+
+                ]
+            },
+            {
+                mainTitle: "CSS",
+                subContents: [
+                    {
+                        subTitle: "<br /> CSS Giriş, Inline Styles, Classes, ID Styles",
+                        body: `
+                             <br />CSS (Cascading Style Sheets), HTML öğelerine stil vermek için kullanılır.
+                             <br /><b>Inline Styles</b> : Stil direkt olarak HTML öğesinin içinde yazılır.
+                             <br />Örnek: <code>&lt;h1 style="color: red;"&gt;Başlık&lt;/h1&gt;</code>
+                             <br /><b>Class Selector (Sınıf Seçici)</b> : Birden fazla öğeye stil vermek için kullanılır.
+                             Class adı önünde nokta <code>.</code> kullanılır.
+                             <br />Örnek CSS: <code>.kirmizi { color: red; }</code>
+                             <br />HTML: <code>&lt;div class="kirmizi"&gt;Kırmızı yazı&lt;/div&gt;</code>
+                             <br /><b>ID Selector (Kimlik Seçici)</b> : Tekil öğeye stil vermek için kullanılır.
+                             ID adı önünde kare işareti <code>#</code> kullanılır.
+                             <br />Örnek CSS: <code>#anaBaslik { font-size: 24px; }</code>
+                             <br />HTML: <code>&lt;h1 id="anaBaslik"&gt;Başlık&lt;/h1&gt;</code>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Temel CSS Özellikleri",
+                        body: `
+                             <br />En çok kullanılan temel CSS özellikleri şunlardır:
+                             <ul>
+                                 <li><code>color</code> : Metin rengini belirler. Örnek: <code>color: blue;</code></li>
+                                 <li><code>background-color</code> : Arka plan rengini ayarlar. Örnek: <code>background-color: yellow;</code></li>
+                                 <li><code>padding</code> : İç boşluk (bir öğenin içindeki alanın kenar boşluğu). Örnek: <code>padding: 10px;</code></li>
+                                 <li><code>margin</code> : Dış boşluk (bir öğenin dışındaki boşluk). Örnek: <code>margin: 15px;</code></li>
+                                 <li><code>border</code> : Kenarlık oluşturur. Örnek: <code>border: 1px solid black;</code></li>
+                                 <li><code>font-size</code> : Yazı boyutunu belirler. Örnek: <code>font-size: 16px;</code></li>
+                                 <li><code>width</code>, <code>height</code> : Genişlik ve yükseklik ayarları.</li>
+                                 <li><code>text-align</code> : Metin hizalamasını ayarlar (left, center, right).</li>
+                                 <li><code>display</code> : Görünürlük ve kutu davranışını belirler (block, inline, none).</li>
+                             </ul>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> CSS Flex ile Layout Oluşturma",
+                        body: `
+                             <br /><code>display: flex;</code> kullanarak esnek, düzenli ve responsive (duyarlı) sayfa yapıları oluşturabilirsiniz.
+                             <br />Flexbox, kutuları yatayda veya dikeyde kolayca hizalamanızı sağlar.
+                             <br />Örnek temel kullanım:
+                             <br /><code>
+                             .container {<br />
+                             &nbsp;&nbsp;display: flex;<br />
+                             &nbsp;&nbsp;justify-content: center; /* Yatayda ortalar */<br />
+                             &nbsp;&nbsp;align-items: center;    /* Dikeyde ortalar */<br />
+                             }
+
+                             `
+                    }
+
+                ]
+            },
+            {
+                mainTitle: "JavaScript",
+                subContents: [
+                    {
+                        subTitle: "<br /> Değişkenler, Sabitler ve Scope",
+                        body: `
+                             <br /><b>JavaScript'te değişken tanımlamak için <code>var</code>, <code>let</code> ve <code>const</code> anahtar kelimeleri kullanılır.</b>
+
+                             <br /><b><code>var</code>:</b>
+                             <ul>
+                                <li>ES6 (2015) öncesinde kullanılan yöntemdir.</li>
+                                <li>Function-scope (fonksiyon kapsamı) ile çalışır.</li>
+                                <li>Block-scope desteklemez (örneğin if içinde tanımlansa bile dışarıdan erişilebilir).</li>
+                                <li>Hoisting (yukarı çekilme) özelliği vardır ama değeri <code>undefined</code> olur.</li>
+                                <li>Artık <b>tavsiye edilmez</b>.</li>
+                                <li>Örnek: <code>var isim = "Ali";</code></li>
+                             </ul>
+
+                             <br /><b><code>let</code>:</b>
+                             <ul>
+                                <li>ES6 ile gelen modern değişken tanımlama yöntemidir.</li>
+                                <li>Block-scope destekler (örneğin if/for/while bloklarında sınırlıdır).</li>
+                                <li>Hoisting vardır ama <b>kullanılmadan önce tanımlanmalıdır</b>.</li>
+                                <li>Değeri sonradan değiştirilebilir.</li>
+                                <li>Örnek: <code>let yas = 25;</code></li>
+                             </ul>
+
+                             <br /><b><code>const</code>:</b>
+                             <ul>
+                                <li>ES6 ile gelen bir diğer tanımlama şeklidir.</li>
+                                <li>Block-scope destekler.</li>
+                                <li>Tanımlandıktan sonra <b>değeri değiştirilemez</b> (sabit).</li>
+                                <li>Ancak <b>object veya array ise içeriği değiştirilebilir</b>.</li>
+                                <li>Örnek: <code>const sehir = "Ankara";</code></li>
+                             </ul>
+
+                             <br /><b>Scope (Kapsam)</b>:
+                             <ul>
+                                <li><b>Global Scope</b>: Tüm kod tarafından erişilebilir.</li>
+                                <li><b>Function Scope</b>: Sadece fonksiyon içinde geçerlidir.</li>
+                                <li><b>Block Scope</b>: Sadece süslü parantezler <code>{ }</code> içinde geçerlidir (let ve const için geçerli).</li>
+                             </ul>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Object ve Diziler",
+                        body: `
+                             <br /><b>JavaScript'te veri gruplamak için object (nesne) ve array (dizi) yapıları kullanılır.</b>
+
+                             <br /><b>Object (Nesne):</b>
+                             <ul>
+                                <li>Süslü parantez <code>{ }</code> ile tanımlanır.</li>
+                                <li>Anahtar (key) ve değer (value) çiftlerinden oluşur.</li>
+                                <li>Her özellik <code>ad: "Ali"</code> gibi yazılır.</li>
+                                <li>Örnek:
+                             <pre><code>
+                             const kisi = {
+                             ad: "Ali",
+                             soyad: "Yılmaz",
+                             yas: 30
+                             };
+                             </code></pre>
+                                </li>
+                                <li>Özelliklere nokta <code>.</code> veya köşeli parantez <code>[]</code> ile erişilir:
+                                    <br /><code>kisi.ad</code> veya <code>kisi["yas"]</code></li>
+                             </ul>
+
+                             <br /><b>Array (Dizi):</b>
+                             <ul>
+                                <li>Köşeli parantez <code>[ ]</code> ile tanımlanır.</li>
+                                <li>İçinde birden fazla veri saklanabilir.</li>
+                                <li>Sıralı yapıdır ve index numarası ile erişilir (0’dan başlar).</li>
+                                <li>Örnek:
+                             <pre><code>
+                             const sayilar = [10, 20, 30, 40];
+                             console.log(sayilar[1]); // 20
+                             </code></pre>
+                                </li>
+                                <li>Dizi elemanları her türden olabilir: sayı, string, boolean, hatta object bile olabilir.</li>
+                             </ul>
+                               `
+                    },
+
+                    {
+                        subTitle: "<br /> For Döngüleri",
+                        body: `
+                             <br /><b>JavaScript'te döngüler, bir işlemi tekrar tekrar gerçekleştirmek için kullanılır.</b>
+
+                             <br /><b>1. <code>for</code> döngüsü:</b>
+                             <ul>
+                                <li>En temel döngü yapısıdır.</li>
+                                <li>Genellikle sayaç (counter) ile birlikte kullanılır.</li>
+                                <li>Örnek:
+                             <pre><code>
+                             for (let i = 0; i < 5; i++) {
+                             console.log(i);
+                             }
+                             // 0 1 2 3 4
+                             </code></pre>
+                                </li>
+                             </ul>
+
+                             <br /><b>2. <code>for...of</code> döngüsü:</b>
+                             <ul>
+                                <li>Array (dizi) gibi iterable yapılarda elemanlara tek tek erişmek için kullanılır.</li>
+                                <li>Örnek:
+                             <pre><code>
+                             const meyveler = ["Elma", "Armut", "Kiraz"];
+                             for (const meyve of meyveler) {
+                             console.log(meyve);
+                             }
+                             // Elma Armut Kiraz
+                             </code></pre>
+                                </li>
+                             </ul>
+
+                             <br /><b>3. <code>for...in</code> döngüsü:</b>
+                             <ul>
+                                <li>Object (nesne) içindeki anahtarlar (property names) üzerinde gezinmek için kullanılır.</li>
+                                <li>Örnek:
+                             <pre><code>
+                             const kullanici = { ad: "Ali", yas: 30 };
+                             for (const key in kullanici) {
+                             console.log(key + ": " + kullanici[key]);
+                             }
+                             // ad: Ali
+                             // yas: 30
+                             </code></pre>
+                                </li>
+                             </ul>
+                             `
+                    },
+                    {
+                        subTitle: "<br /> Fonksiyonlar",
+                        body: `
+                             <br /><b>Fonksiyonlar, belirli bir görevi gerçekleştirmek için tanımlanmış kod bloklarıdır.</b>
+
+                             <br /><b>1. Geleneksel Fonksiyon Tanımı:</b>
+                             <pre><code>
+                             function selamla() {
+                             console.log("Merhaba");
+                             }
+                             selamla(); // Merhaba
+                             </code></pre>
+
+                             <br /><b>2. Parametreli Fonksiyon:</b>
+                             <pre><code>
+                             function topla(a, b) {
+                             return a + b;
+                             }
+                             console.log(topla(3, 5)); // 8
+                             </code></pre>
+
+                             <br /><b>3. Arrow Function (Ok Fonksiyonu):</b>
+                             <ul>
+                                <li>ES6 ile gelmiştir.</li>
+                                <li>Daha kısa yazım sağlar.</li>
+                                <li>Örnek:
+                             <pre><code>
+                             const selamla = () => {
+                             console.log("Merhaba");
+                             };
+                             selamla();
+                             </code></pre>
+                                </li>
+                             </ul>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Events (Olaylar) ve Event Listener",
+                        body: `
+                             <br /><b>Events (Olaylar):</b>
+                             <ul>
+                                <li>Kullanıcı etkileşimlerini yakalamak için kullanılır (tıklama, klavye tuşu, fare hareketi, vb.).</li>
+                                <li>Örnek olaylar: <code>click</code>, <code>mouseover</code>, <code>keydown</code>, <code>submit</code>, <code>change</code></li>
+                             </ul>
+
+                             <br /><b>Event Listener (Olay Dinleyici):</b>
+                             <ul>
+                                <li>Bir HTML elementine olay atamak için kullanılır.</li>
+                                <li><code>addEventListener()</code> metodu ile olay ve çalışacak fonksiyon tanımlanır.</li>
+                                <li>Genel yapı: <code>element.addEventListener("olay", işlev)</code></li>
+                             </ul>
+
+                             <br /><b>Örnek:</b>
+                             <pre><code>
+                             // HTML: &lt;button id="btn"&gt;Tıkla&lt;/button&gt;
+
+                             const buton = document.getElementById("btn");
+                             buton.addEventListener("click", function() {
+                             alert("Butona tıkladınız!");
+                             });
+                             </code></pre>
+
+                             <br />Yukarıdaki örnekte, sayfadaki <code>id="btn"</code> olan butona tıklandığında bir <code>alert</code> penceresi gösterilir.
+
+                             <br /><b>Not:</b> Aynı elemente birden fazla event listener eklenebilir. Bu da <code>onclick</code> yerine <code>addEventListener</code> kullanmanın avantajlarındandır.
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> DOM Yapısı ve Manipülasyonu",
+                        body: `
+                             <br /><b>DOM (Document Object Model):</b> HTML belgesinin programatik olarak erişilebilir, hiyerarşik yapısıdır.
+
+                             <br /><b>Seçiciler (Selectors):</b>
+                             <ul>
+                                <li><code>document.getElementById(\"id\")</code> → ID ile element seçer.</li>
+                                <li><code>document.querySelector(\".sınıf\")</code> → CSS seçiciyle ilk eşleşeni döner.</li>
+                                <li><code>document.querySelectorAll(\"etiket\")</code> → Tüm eşleşenleri döner.</li>
+                             </ul>
+
+                             <br /><b>İçerik ve Stil Manipülasyonu:</b>
+                             <ul>
+                                <li><code>.innerHTML</code>: Etiketin içeriğini okuma veya değiştirme.</li>
+                                <li><code>.textContent</code>: Yalnızca metin içeriği ile çalışır.</li>
+                                <li><code>.style</code>: CSS stillerine erişip değiştirir. Örn: <code>element.style.color = "red"</code></li>
+                             </ul>
+
+                             <br /><b>Yeni Eleman Oluşturma ve Ekleme:</b>
+                             <pre><code>
+                             const yeniDiv = document.createElement("div");
+                             yeniDiv.textContent = "Yeni içerik";
+                             document.body.appendChild(yeniDiv);
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> setTimeout, setInterval",
+                        body: `
+                             <br /><b>setTimeout:</b> Belirli bir süre sonra bir defaya mahsus çalışır.
+                             <pre><code>
+                             setTimeout(() => {
+                             console.log("2 saniye sonra çalıştı");
+                             }, 2000);
+                             </code></pre>
+
+                             <br /><b>setInterval:</b> Belirli aralıklarla tekrar eden işlemler için kullanılır.
+                             <pre><code>
+                             setInterval(() => {
+                               console.log("Her 3 saniyede bir çalışır");
+                             }, 3000);
+                             </code></pre>
+
+                             <br /><b>clearTimeout / clearInterval:</b> Bu işlemleri durdurmak için kullanılır.
+                             <br />Örnek:
+                             <pre><code>
+                             const id = setInterval(() => console.log("çalışıyor"), 1000);
+                             clearInterval(id); // işlemi durdurur
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> fetch, Ajax İşlemleri",
+                        body: `
+                             <br /><b>AJAX (Asynchronous JavaScript and XML):</b> Sayfayı yenilemeden sunucudan veri almayı sağlar.
+
+                             <br /><b>fetch:</b> Modern ve promise tabanlı veri alma yöntemi.
+                             <pre><code>
+                             fetch("https://api.example.com/data")
+                             .then(response => response.json())
+                             .then(data => {
+                             console.log(data);
+                             })
+                             .catch(error => {
+                             console.error("Hata:", error);
+                             });
+                             </code></pre>
+
+                             <br /><b>Açıklamalar:</b>
+                             <ul>
+                                <li><code>.then()</code>: İşlem başarılıysa çalışır.</li>
+                                <li><code>.catch()</code>: Hata olursa çalışır.</li>
+                                <li><code>response.json()</code>: Gelen cevabı JSON’a çevirir.</li>
+                             </ul>
+
+                             <br /><b>Not:</b> fetch ile hem GET hem POST istekleri yapılabilir. POST için ayrıca <code>method</code> ve <code>body</code> eklenir.
+                             `
+                    }
+
+                ]
+            },
+            {
+                mainTitle: "Bootstrap",
+                subContents: [
+                    {
+                        subTitle: "<br /> Bootstrap Nedir?",
+                        body: `
+                             <br />Bootstrap, mobil öncelikli, responsive (duyarlı) tasarımlar geliştirmeyi kolaylaştıran popüler bir CSS framework’üdür.
+                             <ul>
+                                <li>Hazır <b>CSS sınıfları</b>, <b>bileşenler</b> ve <b>JavaScript eklentileri</b> içerir.</li>
+                                <li>Özellikle hızlı prototipleme ve tutarlı tasarım için idealdir.</li>
+                             </ul>
+                             <br /><b>CDN ile ekleme:</b>
+                             <pre><code>
+                             &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Bootstrap Grid Layout",
+                        body: `
+                             <br />Bootstrap 12 sütunlu (grid) sistem kullanır. Her satır <code>.row</code> ile başlar, sütunlar <code>.col-*</code> sınıfıyla tanımlanır.
+                             <ul>
+                                <li><code>col-*</code> → Her cihaz boyutu için otomatik ayarlar.</li>
+                                <li><code>col-md-6</code> → Orta boyutlu cihazlarda 6 sütun genişlik.</li>
+                             </ul>
+                             <br /><b>Örnek:</b>
+                             <pre><code>
+                             &lt;div class="row"&gt;
+                             &lt;div class="col-md-6"&gt;Sol&lt;/div&gt;
+                             &lt;div class="col-md-6"&gt;Sağ&lt;/div&gt;
+                             &lt;/div&gt;
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Bootstrap Button ve Input",
+                        body: `
+                             <br />Bootstrap, form elemanları ve butonlar için şık ve kolayca uygulanabilir sınıflar sağlar.
+                             <ul>
+                                <li><code>.btn</code> → Genel buton sınıfı</li>
+                                <li><code>.btn-primary</code>, <code>.btn-danger</code> vb. → Renk stilleri</li>
+                                <li><code>.form-control</code> → Tüm <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> alanları için kullanılır</li>
+                             </ul>
+                             <br /><b>Örnek:</b>
+                             <pre><code>
+                             &lt;button class="btn btn-success"&gt;Kaydet&lt;/button&gt;
+                             &lt;input type="text" class="form-control" placeholder="Adınızı girin"&gt;
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Bootstrap Spacing (Margin, Padding)",
+                        body: `
+                             <br />Boşlukları ayarlamak için <code>m</code> (margin) ve <code>p</code> (padding) sınıfları kullanılır.
+                             <ul>
+                                <li><code>m-3</code> → Tüm kenarlara 3 birim margin</li>
+                                <li><code>pt-2</code> → Üst padding 2 birim</li>
+                                <li><code>mx-auto</code> → Yatayda otomatik ortalama</li>
+                             </ul>
+                             <br /><b>Örnek:</b>
+                             <pre><code>
+                             &lt;div class="p-4 m-2 bg-light"&gt;İçerik kutusu&lt;/div&gt;
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Bootstrap Alert, Modal, Navbar",
+                        body: `
+                             <br /><b>Alert:</b> Bilgilendirme kutuları
+                             <pre><code>
+                             &lt;div class="alert alert-warning"&gt;Uyarı mesajı!&lt;/div&gt;
+                             </code></pre>
+
+                             <br /><b>Modal:</b> Sayfa içinde açılır pencere (kapsayıcı)
+                             <pre><code>
+                             &lt;button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ornekModal"&gt;Aç&lt;/button&gt;
+
+                             &lt;div class="modal fade" id="ornekModal" tabindex="-1"&gt;
+                                &lt;div class="modal-dialog"&gt;
+                                    &lt;div class="modal-content"&gt;
+                                        &lt;div class="modal-header"&gt;&lt;h5 class="modal-title"&gt;Başlık&lt;/h5&gt;&lt;/div&gt;
+                                        &lt;div class="modal-body"&gt;İçerik buraya gelecek&lt;/div&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                             &lt;/div&gt;
+                             </code></pre>
+
+                             <br /><b>Navbar:</b> Üst gezinme menüsü
+                             <pre><code>
+                             &lt;nav class="navbar navbar-expand-lg navbar-dark bg-dark"&gt;
+                             &lt;div class="container-fluid"&gt;
+                             &lt;a class="navbar-brand" href="#"&gt;Site Adı&lt;/a&gt;
+                             &lt;/div&gt;
+                             &lt;/nav&gt;
+                             </code></pre>
+                             `
+                    }
+
+                ]
+            },
+            {
+                mainTitle: "Github",
+                subContents: [
+                    {
+                        subTitle: "<br /> Git ve Github Nedir?",
+                        body: `
+                             <br /><b>Git:</b> Yazılım geliştirme sürecinde, dosya değişikliklerini takip etmeye yarayan dağıtık bir sürüm kontrol sistemidir.
+                             <br /><b>Github:</b> Git repolarını internet üzerinde barındırmanı, paylaşmanı ve takımca yönetmeni sağlayan bir platformdur.
+                             <ul>
+                                <li>Git: Lokal kontrol</li>
+                                <li>GitHub: Bulut tabanlı paylaşım</li>
+                             </ul>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Github Repository İşlemleri",
+                        body: `
+                             <br />GitHub üzerinde proje depoları (<code>repository</code>) oluşturabilir, bu repoları yerel bilgisayarına <b>klonlayabilir</b> ve değişiklikleri <b>push</b> edebilirsin.
+                             <ul>
+                                <li><b>Yeni Repo:</b> GitHub üzerinde <i>New Repository</i> ile oluşturulur.</li>
+                                <li><b>Clone:</b> <code>git clone &lt;repo-url&gt;</code> komutuyla indirilir.</li>
+                                <li><b>Commit:</b> Değişiklikleri kaydetmek için kullanılır.</li>
+                                <li><b>Push:</b> Commit’leri GitHub’a gönderir.</li>
+                             </ul>
+                             <pre><code>
+                             git add .
+                             git commit -m "ilk commit"
+                             git push origin main
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Github Desktop Kurulumu",
+                        body: `
+                             <br />Komut satırı kullanmadan Git işlemleri yapmanı sağlayan görsel bir uygulamadır.
+                             <ul>
+                                <li>Windows/macOS için kurulabilir.</li>
+                                <li>Arayüzden <code>clone</code>, <code>commit</code>, <code>push</code> gibi işlemler kolayca yapılabilir.</li>
+                             </ul>
+                             <br />Uygulama bağlantısı: <a href="https://desktop.github.com/" target="_blank">desktop.github.com</a>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Branch İşlemleri (Push/Pull)",
+                        body: `
+                             <br />Branch (dal) sistemi sayesinde aynı projede farklı versiyonlar geliştirilebilir.
+                             <ul>
+                                <li><b>Yeni branch oluştur:</b> <code>git checkout -b yeni-dal</code></li>
+                                <li><b>Push:</b> Değişiklikleri dal üzerine gönderir.</li>
+                                <li><b>Pull:</b> Güncel verileri uzak repodan çeker.</li>
+                             </ul>
+                             <pre><code>
+                             git push origin yeni-dal
+                             git pull origin main
+                             </code></pre>
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Pull Request ve Merge",
+                        body: `
+                             <br /><b>Pull Request (PR):</b> Geliştirilen dalın ana dala eklenmesi için yapılan istektir.
+                             <ul>
+                                <li><b>Pull Request:</b> GitHub arayüzünden açılır.</li>
+                                <li><b>Merge:</b> Onaylanan PR, <code>main</code> gibi ana dallara birleştirilir.</li>
+                             </ul>
+                             <br />Bu yöntemle takımca çalışmada düzen ve kontrol sağlanır.
+                             `
+                    },
+
+                    {
+                        subTitle: "<br /> Conflict / Çakışma Çözümü",
+                        body: `
+                             <br />Aynı satırlarda iki kişi farklı değişiklik yaparsa <b>conflict (çakışma)</b> oluşur.
+                             <ul>
+                                <li>Merge sırasında Git çatışan satırları gösterir.</li>
+                                <li><b>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</b> ile başlayan ve <b>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</b> ile biten alanlar düzeltme gerektirir.</li>
+                             </ul>
+                             <pre><code>
+                             &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+                             mevcut kod
+                             =======
+                             gelen değişiklik
+                             &gt;&gt;&gt;&gt;&gt;&gt;&gt; branch-adi
+                             </code></pre>
+                             <br />Kod manuel düzenlendikten sonra:
+                             <pre><code>
+                             git add .
+                             git commit -m "Çakışma çözüldü"
+                             </code></pre>
+                             `
+                    }
+
+                ]
+            }
+        ];
+
+        let currentMainIndex = 0;
+        let currentSubIndex = 0;
+
+        // Menü davranışını yönetmek için
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sayfa yüklendiğinde tüm alt başlıkları kapalı tut
+            const collapses = document.querySelectorAll('.collapse');
+            collapses.forEach(collapse => {
+                collapse.classList.remove('show');
+            });
+
+            // Ana başlıklara tıklanınca diğerlerini kapatıp sadece tıklananı aç
+            const mainLinks = document.querySelectorAll('#sidebarMenu > li > a[data-bs-toggle="collapse"]');
+            mainLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Diğer tüm açık menüleri kapat
+                    const allCollapses = document.querySelectorAll('.collapse.show');
+                    allCollapses.forEach(item => {
+                        if (item.id !== this.getAttribute('href').substring(1)) {
+                            const bsCollapse = new bootstrap.Collapse(item, { toggle: false });
+                            bsCollapse.hide();
+                        }
+                    });
+                });
+            });
+
+            // Alt başlıklara tıklanınca menüyü açık tut
+            const subLinks = document.querySelectorAll('#sidebarMenu .collapse a');
+            subLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Ana başlığa tıklanmasını engelle
+
+                    // Mobilde menüyü otomatik kapat
+                    if (window.innerWidth < 992) {
+                        document.querySelector('.sidebar').classList.remove('show');
+                        document.querySelector('.overlay').classList.remove('show');
+                    }
+                });
+            });
+
+            // Menü toggle butonu
+            document.querySelector('.menu-toggle').addEventListener('click', function () {
+                document.querySelector('.sidebar').classList.toggle('show');
+                document.querySelector('.overlay').classList.toggle('show');
+            });
+
+            // Overlay'e tıklayınca menüyü kapat
+            document.querySelector('.overlay').addEventListener('click', function () {
+                document.querySelector('.sidebar').classList.remove('show');
+                this.classList.remove('show');
+            });
+
+            // Arama formunu küçük ekranda optimize et
+            const searchForm = document.getElementById('searchForm');
+            if (window.innerWidth < 768) {
+                searchForm.classList.add('w-100');
+                document.getElementById('searchInput').classList.add('w-100');
+            }
+        });
+
+        function showSlide(mainIndex, subIndex) {
+            if (
+                mainIndex >= 0 && mainIndex < contents.length &&
+                subIndex >= 0 && subIndex < contents[mainIndex].subContents.length
+            ) {
+                currentMainIndex = mainIndex;
+                currentSubIndex = subIndex;
+
+                const mainTitle = contents[mainIndex].mainTitle;
+                const subContent = contents[mainIndex].subContents[subIndex];
+
+                document.getElementById("slideContainer").innerHTML = `
+                                                <h2>${mainTitle}</h2>
+                                                <h4>${subContent.subTitle}</h4>
+                                                <p>${subContent.body}</p>
+                                            `;
+
+                highlightMenuItem(mainIndex, subIndex);
+            }
+        }
+
+        function showWelcomeMessage() {
+            const quotes = [
+                {
+                    text: "Program yazmak, bir sorunu çözmek için bilgisayarla yapılan bir konuşmadır. İyi programcılar sadece kod yazmaz, problemleri zarif bir şekilde çözer.",
+                    author: "Andrew Hunt"
+                },
+                {
+                    text: "Yazılım geliştirme bir sanattır, tıpkı resim yapmak veya müzik bestelemek gibi. Tek fark, tuvaliniz bilgisayar, fırçanız klavye ve notalarınız kodlardır.",
+                    author: ""
+                },
+                {
+                    text: "Kod yazarken asla 'Bu çalışıyor ama neden?' dememelisin. Eğer nedenini bilmiyorsan, o kod sadece şans eseri çalışıyordur.",
+                    author: "Linus Torvalds"
+                },
+                {
+                    text: "Yazılım öğrenmek bir maratondur, sprint değil. Sabırlı olun ve her gün küçük adımlarla ilerleyin.",
+                    author: ""
+                },
+                {
+                    text: "Kodunuzu başkalarının okuyacağını, sadece makinenin çalıştıracağını düşünerek yazmayın. Temiz kod yazmak profesyonelliğin gereğidir.",
+                    author: "Robert C. Martin"
+                }
+
+            ];
+
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+            document.getElementById("slideContainer").innerHTML = `
+                                            <div class="welcome-message">
+                                                <h2>Full-Stack Yolculuğunun Tekrar Sayfasına Hoş Geldin!</h2>
+                                                <div class="quote">"${randomQuote.text}"</div>
+                                                <div class="author">- ${randomQuote.author}</div>
+                                                <hr>
+                                                <p>Soldaki menüden bir konu seçerek başlayabilirsin.</p>
+                                                <p>Unutma: Her uzman bir zamanlar acemiydi. Adım adım ilerlemek başarının anahtarıdır.</p>
+                                            </div>
+                                        `;
+        }
+
+        function highlightMenuItem(mainIndex, subIndex) {
+            const links = document.querySelectorAll('#sidebarMenu a[data-index]');
+            links.forEach(link => link.classList.remove('active'));
+
+            const activeLink = document.querySelector(`#sidebarMenu a[data-index="${mainIndex}-${subIndex}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                activeLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        document.querySelectorAll('#sidebarMenu a[data-index]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const idx = link.getAttribute('data-index').split('-').map(Number);
+                const mainIndex = idx[0];
+                const subIndex = idx[1];
+                showSlide(mainIndex, subIndex);
+            });
+        });
+
+        // İleri / Geri butonları için:
+        document.getElementById('nextButton').addEventListener('click', () => {
+            let main = currentMainIndex;
+            let sub = currentSubIndex + 1;
+
+            if (sub >= contents[main].subContents.length) {
+                main++;
+                sub = 0;
+            }
+
+            if (main >= contents.length) {
+                main = 0;
+                sub = 0;
+            }
+
+            showSlide(main, sub);
+        });
+
+        document.getElementById('prevButton').addEventListener('click', () => {
+            let main = currentMainIndex;
+            let sub = currentSubIndex - 1;
+
+            if (sub < 0) {
+                main--;
+                if (main < 0) main = contents.length - 1;
+                sub = contents[main].subContents.length - 1;
+            }
+
+            showSlide(main, sub);
+        });
+
+        // Arama fonksiyonunu da buna göre güncelleyelim:
+        function searchTopic(query) {
+            query = query.toLowerCase();
+
+            for (let i = 0; i < contents.length; i++) {
+                if (contents[i].mainTitle.toLowerCase().includes(query)) {
+                    return [i, 0];
+                }
+                for (let j = 0; j < contents[i].subContents.length; j++) {
+                    if (contents[i].subContents[j].subTitle.toLowerCase().includes(query) ||
+                        contents[i].subContents[j].body.toLowerCase().includes(query)) {
+                        return [i, j];
+                    }
+                }
+            }
+            return [-1, -1];
+        }
+
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const query = document.getElementById("searchInput").value.trim();
+            if (!query) return;
+
+            const [mainIndex, subIndex] = searchTopic(query);
+            if (mainIndex !== -1) {
+                showSlide(mainIndex, subIndex);
+            } else {
+                document.getElementById("slideContainer").innerHTML = `
+                                                <h4>🔍 Arama sonucu bulunamadı:</h4>
+                                                <p>"${query}" ile eşleşen bir konu bulunamadı.</p>
+                                            `;
+            }
+        });
+
+        // Sayfa ilk açıldığında hoş geldin mesajı göster
+        showWelcomeMessage();
+    </script>
+</body>
+</html>
