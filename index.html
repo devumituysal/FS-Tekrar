@@ -231,7 +231,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
@@ -317,7 +317,7 @@
                              `
                     }
 
-
+                    
                 ]
             },
             {
@@ -351,24 +351,25 @@
                         body: `
                              <br /><b>Başlıklar:</b> h1’den h6’ya kadar <code>&lt;h1&gt;</code> - <code>&lt;h6&gt;</code> etiketleri ile kullanılır.
                              <br />
-                             <h1>h1 başlık (h1)</h1>
-                             <h2>h2 başlık (h2)</h2>
-                             <h3>h3 başlık (h3)</h3>
-                             <h4>h4 başlık (h4)</h4>
-                             <h5>h5 başlık (h5)</h5>
-                             <h6>h6 başlık (h6)</h6>
+                             <h1> Başlık (h1)</h1> <code>&lt;h1&gt;</code> <code>&lt;/h1&gt;</code>
+                             <h2> Başlık (h2)</h2> <code>&lt;h2&gt;</code> <code>&lt;/h2&gt;</code>
+                             <h3> Başlık (h3)</h3> <code>&lt;h3&gt;</code> <code>&lt;/h3&gt;</code>
+                             <h4> Başlık (h4)</h4> <code>&lt;h4&gt;</code> <code>&lt;/h4&gt;</code>
+                             <h5> Başlık (h5)</h5> <code>&lt;h5&gt;</code> <code>&lt;/h5&gt;</code>
+                             <h6> Başlık (h6)</h6> <code>&lt;h6&gt;</code> <code>&lt;/h6&gt;</code>
 
+                             <br />
                              <br /><b>Paragraf:</b> <code>&lt;p&gt;</code> etiketi ile oluşturulur.
                              <br /><p>Bu bir paragraf örneğidir.</p>
 
-                             <br /><b>Sırasız Liste:</b> <code>&lt;ul&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
+                             <br /><b>Sırasız Liste (Unordered List):</b> <code>&lt;ul&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
                              <ul>
-                                 <li>İlk madde</li>
+                                 <li>Birinci madde</li>
                                 <li>İkinci madde</li>
                                  <li>Üçüncü madde</li>
                              </ul>
 
-                             <br /><b>Sıralı Liste:</b> <code>&lt;ol&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
+                             <br /><b>Sıralı Liste (Ordered List):</b> <code>&lt;ol&gt;</code> ve <code>&lt;li&gt;</code> etiketleri ile oluşturulur.
                              <ol>
                                  <li>Birinci madde</li>
                                  <li>İkinci madde</li>
@@ -398,15 +399,21 @@
                         subTitle: "<br /> Tablolar",
                         body: `
                              <br />Tablolar <code>&lt;table&gt;</code> etiketiyle oluşturulur.
-                             <br><code>&lt;tr&gt;</code> : Tablo satırını belirtir.
-                             <br><code>&lt;td&gt;</code> : Satır içindeki hücreyi (sütun) belirtir.
+                             <br><code>&lt;tr&gt;</code> : Tablo satırını (Table Row) belirtir.
+                             <br><code>&lt;td&gt;</code> : Satır içindeki hücreyi (Table Data) (sütun) belirtir.
+                             <br><code>&lt;th&gt;</code> : Başlık hücresidir. (Table Header) Genellikle ilk satırda kullanılır ve yazılar kalın ve ortalanmış şekilde görünür.
                              <br>Örnek:
-                             <br /><code>
+                             <br />
+                             <code>
                              &lt;table&gt;<br />
-                             &nbsp;&nbsp;&lt;tr&gt;<br />
-                             &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 1&lt;/td&gt;<br />
-                             &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 2&lt;/td&gt;<br />
-                             &nbsp;&nbsp;&lt;/tr&gt;<br />
+                                &nbsp;&nbsp;&lt;tr&gt;<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Başlık 1&lt;/th&gt;<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Başlık 2&lt;/th&gt;<br />
+                                &nbsp;&nbsp;&lt;/tr&gt;<br />
+                                &nbsp;&nbsp;&lt;tr&gt;<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 1&lt;/td&gt;<br />
+                                     &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;Hücre 2&lt;/td&gt;<br />
+                                &nbsp;&nbsp;&lt;/tr&gt;<br />
                              &lt;/table&gt;
                              </code>
                              `
