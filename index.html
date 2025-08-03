@@ -85,6 +85,21 @@
                 font-weight: bold;
                 text-align: right;
             }
+        #hucreGrid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            background-color: #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +112,9 @@
             <a class="navbar-brand d-flex align-items-center mx-auto" href="#" style="height: 100%;">
                 <!--<img src="logo.png" alt="Logo" style="height: 56px; width: auto; object-fit: contain;" />-->
             </a>
+            <button id="btnOyunlar" class="btn btn-outline-success mx-auto">
+                Oyunlar
+            </button>
             <form id="searchForm" class="d-flex" role="search">
                 <input id="searchInput" class="form-control me-2" type="search" placeholder="Konu ara..." aria-label="Search" />
                 <button class="btn btn-outline-success" type="submit">Ara</button>
@@ -212,6 +230,7 @@
 
         <!-- İçerik Alanı -->
         <div class="p-4 w-100 content-area" id="contentArea">
+
             <div id="slideContainer" class="mb-4">
                 <div class="welcome-message">
                     <h2>👨‍💻 Yazılım Öğrenme Yolculuğuna Hoş Geldin!</h2>
@@ -228,6 +247,24 @@
             <div class="d-flex justify-content-between">
                 <button id="prevButton" class="btn btn-outline-secondary">&lsaquo; Geri</button>
                 <button id="nextButton" class="btn btn-primary">İleri &rsaquo;</button>
+            </div>
+            <div class="text-center p-4" style="display:none" id="oyunAlani">
+                <div id="oyunListesi">
+                    <button class="btn btn-outline-success mx-auto" id="btnHucreYakalama">
+                        🎯 Hücre Yakalama Oyunu
+                    </button>
+                </div>
+                <div id="hucreOyunuAlani" style="display:none;" class="mt-4">
+                    <div class="d-flex justify-content-center align-items-center gap-5 mb-4">
+                        <button class="btn btn-outline-success mr-5" id="baslatHucre"> Başlat! </button>
+                        <div class="mb-2" id="hucrePuan" style="display:inline-block;">  </div>
+                        <div id="sayacHucre">Kalan Süre: 30</div>
+                    </div>
+                    <div class="hucreGrid" id="hucreGrid"></div>
+                </div>
+                <button id="btnGeri" class="btn btn-outline-success mx-auto mt-5">
+                    Konuya Dön
+                </button>
             </div>
         </div>
     </div>
@@ -1024,6 +1061,17 @@
                         document.querySelector('.sidebar').classList.remove('show');
                         document.querySelector('.overlay').classList.remove('show');
                     }
+                    // Oyun alanlarını gizle
+                    document.getElementById("oyunAlani").style.display = "none";
+                    document.getElementById("oyunListesi").style.display = "none";
+                    document.getElementById("hucreOyunuAlani").style.display = "none";
+
+                    // Oyun sayaçlarını durdur
+                    oyunuSifirla();
+                    // Tekrar konu içeriklerini göster
+                    document.getElementById("slideContainer").style.display = "block";
+                    document.getElementById("prevButton").style.display = "block";
+                    document.getElementById("nextButton").style.display = "block";
                 });
             });
 
@@ -1214,6 +1262,126 @@
 
         // Sayfa ilk açıldığında hoş geldin mesajı göster
         showWelcomeMessage();
+
+        // Oyunlar butonuna tıklandığında...
+        document.getElementById("btnOyunlar").addEventListener("click", function () {
+           
+            document.getElementById("slideContainer").style.display = "none";
+            document.getElementById("prevButton").style.display = "none";
+            document.getElementById("nextButton").style.display = "none";
+            document.getElementById("oyunAlani").style.display = "block";
+
+            document.getElementById("oyunListesi").style.display = "block"; 
+            document.getElementById("hucreOyunuAlani").style.display = "none"; 
+            oyunuSifirla();
+        })
+        document.getElementById("btnGeri").addEventListener("click", function () {
+            document.getElementById("slideContainer").style.display = "block";
+            document.getElementById("prevButton").style.display = "block";
+            document.getElementById("nextButton").style.display = "block";
+            document.getElementById("oyunAlani").style.display = "none";
+            oyunuSifirla();
+        })
+
+        // HUCRE YAKALAMA OYUNU//
+
+
+        document.getElementById("btnHucreYakalama").addEventListener("click", function () {
+
+            oyunuSifirla();
+            document.getElementById("hucrePuan").innerHTML = "ToplamPuan = 0 ";
+            document.getElementById("sayacHucre").innerHTML = "Kalan Süre: 30 ";
+
+            document.getElementById("hucreOyunuAlani").style.display = "block";
+            document.getElementById("oyunListesi").style.display = "none";
+            document.getElementById("hucreGrid").innerHTML = "";  
+            const hucreGrid = document.getElementById("hucreGrid");
+            hucreGrid.innerHTML = ""
+           
+        });
+
+        let oyunSuresi = null;
+        let puan = 0;
+        let active = null;
+        let kalanSure = 30; 
+        let sayacInterval = null;
+
+        document.getElementById("baslatHucre").addEventListener("click", function () {
+
+            if (oyunSuresi) {
+                clearInterval(oyunSuresi);
+            }
+            if (sayacInterval) {
+                clearInterval(sayacInterval);
+            }
+            puan = 0;
+            active = null;
+            kalanSure = 30;
+
+            document.getElementById("hucrePuan").innerHTML = "ToplamPuan = 0";
+            document.getElementById("sayacHucre").innerHTML = "Kalan Süre: " + kalanSure;
+
+            const hucreGrid = document.getElementById("hucreGrid");
+            hucreGrid.innerHTML = "";
+
+            if (hucreGrid.children.length === 0) {
+                for (let i = 0; i < 36; i++) {
+                    let hucre = document.createElement("div");
+                    hucre.className = "cell";
+                    hucre.id = "cell-" + i;
+
+                    hucre.addEventListener("click", function () {
+                        if (this.id === active) {
+                            puan++;
+                            document.getElementById("hucrePuan").innerHTML = "ToplamPuan = " + puan;
+                            this.style.backgroundColor = "#ccc";
+                            active = null;
+                        }
+                    })
+
+                    hucreGrid.appendChild(hucre);
+                }
+            };
+          
+
+            oyunSuresi = setInterval(function () {
+                if (active !== null) {
+                    if (document.getElementById(active)) {
+                        document.getElementById(active).style.backgroundColor = "#ccc";
+                    }
+                }
+                const randomId = Math.floor(Math.random() * 36);
+                active = "cell-" + randomId;
+                const hedefHucre = document.getElementById(active);
+                if (hedefHucre) {
+                    hedefHucre.style.backgroundColor = "red";
+                }
+            }, 1000);
+
+            sayacInterval = setInterval(function () {
+                kalanSure--;
+                document.getElementById("sayacHucre").innerHTML = "Kalan Süre: " + kalanSure;
+                if (kalanSure <= 0) {
+                    clearInterval(oyunSuresi);
+                    clearInterval(sayacInterval);
+                    alert("Süre doldu! Toplam Puan: " + puan);
+                }
+            }, 1000);
+        });
+
+        function oyunuSifirla() {
+            if (oyunSuresi) {
+                clearInterval(oyunSuresi);
+                oyunSuresi = null;
+            }
+            if (sayacInterval) {
+                clearInterval(sayacInterval);
+                sayacInterval = null;
+            }
+        }
+
+        
+
     </script>
 </body>
 </html>
